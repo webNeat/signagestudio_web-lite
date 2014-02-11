@@ -12,9 +12,7 @@ require.config({
         "bootstrap": '_common/_js/bootstrap/js/bootstrap',
         "bootbox": '_common/_js/bootbox/bootbox',
         "Cookie": '_common/_js/cookie/jquery.cookie',
-        "RC4": '_common/_js/rc4/RC4',
         "Base64": '_common/_js/base64/jquery.base64',
-        "Jalapeno": '_jalapeno/Jalapeno',
         "Services": 'Services',
         "Elements": 'Elements',
         "LayoutManager": '_comps/LayoutManager',
@@ -72,28 +70,14 @@ require.config({
             deps: ["jquery"],
             exports: 'bootbox'
         },
-        "AppAuth": {
-            deps: ["RC4","Cookie"]
-        },
         "Services": {
             exports: 'Services'
         },
         "Elements": {
             exports: 'Elements'
         },
-        "RC4": {
-            exports: 'RC4'
-        },
         "ComBroker": {
             deps: ["backbone", "jquery"]
-        },
-        "Jalapeno": {
-            deps: ['jquery', 'Base64'],
-            exports: 'Jalapeno'
-        },
-        "Base64": {
-            deps: ['jquery'],
-            exports: 'base64'
         }
     }
 });

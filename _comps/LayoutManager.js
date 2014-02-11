@@ -89,14 +89,10 @@ define(['underscore', 'jquery', 'backbone', 'AppAuth', 'AppSizer', 'NavigationVi
              @method app
              **/
             routeApp: function () {
-                if (this.appAuth.authenticated) {
-                    this.initContentPage();
-                    this.initCampaignWizardPage();
-                    this.initModal();
-                    this.listenOnSlidingPanel();
-                } else {
-                    this.navigate('unauthenticated', {trigger: true});
-                }
+                this.initContentPage();
+                this.initCampaignWizardPage();
+                this.initModal();
+                this.listenOnSlidingPanel();
             },
 
             /**
@@ -275,7 +271,7 @@ define(['underscore', 'jquery', 'backbone', 'AppAuth', 'AppSizer', 'NavigationVi
              Listen for open/close actions on properties panel that can slide in and out
              @method listenOnSlidingPanel
              **/
-            listenOnSlidingPanel: function(){
+            listenOnSlidingPanel: function () {
                 $(Elements.TOGGLE_PANEL).on('click', function () {
                     if ($(Elements.TOGGLE_PANEL).hasClass('buttonStateOn')) {
                         $(Elements.TOGGLE_PANEL).toggleClass('buttonStateOn');
