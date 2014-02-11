@@ -39,7 +39,6 @@ require.config({
         "CampaignView": '_views/CampaignView',
         "PopModalView": '_views/PopModalView',
         "Lib": '_comps/Lib'
-
     },
 
 
