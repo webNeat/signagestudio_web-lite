@@ -11,8 +11,6 @@ require.config({
         "underscore": '_common/_js/underscore/underscore',
         "bootstrap": '_common/_js/bootstrap/js/bootstrap',
         "bootbox": '_common/_js/bootbox/bootbox',
-        "Cookie": '_common/_js/cookie/jquery.cookie',
-        "Base64": '_common/_js/base64/jquery.base64',
         "Services": 'Services',
         "Elements": 'Elements',
         "LayoutManager": '_comps/LayoutManager',

@@ -7,8 +7,15 @@
  **/
 define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
 
-    var StackView = Backbone.StackView = {};
+    /**
+     EVent fired when a view is selected
+     @event SELECTED_STACK_VIEW
+     @static
+     @final
+     **/
+    Backbone.EVENTS.SELECTED_STACK_VIEW = 'SELECTED_STACK_VIEW';
 
+    var StackView = Backbone.StackView = {};
     StackView.ViewPort = Backbone.View.extend({
 
         /**
@@ -24,11 +31,13 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          Add a backbone view so we can control its display mode via one of the derived classes
          @method addView
          @param {View} i_view add a backbone view to control
+         @return {String} stack view id added
          **/
         addView: function (i_view) {
             i_view.$el.hide();
             var oid = i_view.el.id === '' ? i_view.cid : i_view.el.id;
             this.m_views[oid] = i_view;
+            return oid;
         },
 
         /**
@@ -63,7 +72,25 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          @param {Object} i_view
          **/
         selectView: function (i_view) {
-            this.m_selectedView = i_view;
+            this.m_selectedView = this._parseView(i_view);
+            this._notifySubsribers(i_view);
+        },
+
+        /**
+         If view was given as an ID string, find its matching Backbone > View
+         @method _parseView
+         @param {Object} i_view
+         **/
+        _parseView: function(i_view){
+            if (_.isString(i_view)){
+                i_view = this.getViewByID(i_view);
+            }
+            return i_view;
+        },
+
+        _notifySubsribers: function(i_view){
+            var view = this._parseView(i_view);
+            this.trigger(Backbone.EVENTS.SELECTED_STACK_VIEW, view);
         }
 
     });
@@ -97,6 +124,7 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          **/
         selectView: function (i_view) {
             var self = this;
+            i_view = self._parseView(i_view);
             StackView.ViewPort.prototype.selectView.apply(this, arguments);
             $.each(self.m_views, function (id, view) {
                 view.$el.hide();
@@ -112,6 +140,10 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          **/
         slideToPage: function (i_toView, i_direction) {
             var self = this;
+            i_toView = self._parseView(i_toView);
+            if (i_toView==self.m_selectedView)
+                return;
+            self._notifySubsribers(i_toView);
             i_toView.$el.show();
             // toView.el.offsetWidth;
             // Position the new page at the starting position of the animation
@@ -155,11 +187,31 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          **/
         selectView: function (i_view) {
             var self = this;
+            var bb_view = self._parseView(i_view);
+            if (self.m_selectedView==bb_view)
+                return;
             StackView.ViewPort.prototype.selectView.apply(this, arguments);
             $.each(self.m_views, function (id, view) {
                 view.$el.hide();
             });
-            i_view.$el.fadeIn(this.m_duration);
+            bb_view.$el.fadeIn(this.m_duration);
+        },
+
+        /**
+         Select a stack view using an offset index
+         @method selectIndex
+         @param {Number} i_index offset
+         **/
+        selectIndex: function (i_index) {
+            var self = this;
+            var foundView = undefined;
+            var i = -1;
+            $.each(this.m_views, function (view_id) {
+                i++;
+                if (i == i_index)
+                    foundView = self.m_views[view_id];
+            });
+            return foundView;
         }
     });
 
@@ -194,13 +246,14 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
          **/
         selectView: function (i_view) {
             var self = this;
+            i_view = self._parseView(i_view);
             StackView.ViewPort.prototype.selectView.apply(this, arguments);
             $.each(self.m_views, function (id, view) {
                 view.$el.hide()
             });
             i_view.$el.show();
             self.$el.append(i_view.el);
-            $('.modal_close').on('click', function (e) {
+            $('.modal_close').one('click', function (e) {
                 self.closeModal(self.el);
                 e.preventDefault();
             });
@@ -229,8 +282,8 @@ define(['jquery', 'backbone', 'StackView'], function ($, Backbone, StackView) {
         },
 
         /**
-         Close via animation the currently opened modal
-         @method closeModal
+         Close via animation the currently opened modal window
+         @method closelModal
          @param {String} modal_id
          **/
         closeModal: function (modal_id) {

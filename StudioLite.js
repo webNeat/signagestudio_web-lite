@@ -12,6 +12,7 @@ define(['underscore', 'jquery', 'backbone', 'bootstrap', 'backbone.controller', 
         initialize: function () {
 
             Backbone.globs = {};
+            Backbone.EVENTS = {};
             Backbone.lib = new Lib();
             Backbone.lib.addBackboneViewOptions();
             Backbone.comBroker = new ComBroker();
