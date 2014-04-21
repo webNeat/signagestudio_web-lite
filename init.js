@@ -88,8 +88,8 @@ require.config({
         'StationModel': '_models/StationModel',
         'Lib': '_libs/Lib',
         'ScreenTemplate': '_libs/ScreenTemplate',
-        'Jalapeno': '_libs/Jalapeno',
-        'JalapenoHelper': '_libs/JalapenoHelper',
+        'Pepper': '_libs/Pepper',
+        'PepperHelper': '_libs/PepperHelper',
         'Fonts': '_libs/Fonts'
     },
 
@@ -145,12 +145,12 @@ require.config({
         'ComBroker': {
             deps: ['backbone', 'jquery']
         },
-        'Jalapeno': {
+        'Pepper': {
             deps: ['jquery', 'Base64'],
-            exports: 'Jalapeno'
+            exports: 'Pepper'
         },
-        'JalapenoHelper': {
-            exports: 'JalapenoHelper'
+        'PepperHelper': {
+            exports: 'PepperHelper'
         },
         'Base64': {
             deps: ['jquery'],
@@ -175,7 +175,7 @@ require.config({
 
 if (window.location.href.indexOf('dist') > -1) {
     requirejs.onError = function (err) {
-        alert('An error has occurred:( \n\n\n\n ' + err);
+        console.log('require js error ' + err);
     }
 }
 
